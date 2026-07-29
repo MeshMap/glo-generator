@@ -5,14 +5,14 @@
   "use strict";
 
   const COLORS = {
-    easy:   { bg: "#EAF3DE", fg: "#3B6D11", dot: "#639922" },
-    medium: { bg: "#FAEEDA", fg: "#854F0B", dot: "#EF9F27" },
-    hard:   { bg: "#FCEBEB", fg: "#A32D2D", dot: "#E24B4A" }
+    item:  { bg: "#EAF3DE", fg: "#3B6D11", dot: "#639922" },
+    tag:   { bg: "#FAEEDA", fg: "#854F0B", dot: "#EF9F27" },
+    mural: { bg: "#FCEBEB", fg: "#A32D2D", dot: "#E24B4A" }
   };
 
   const COUNTDOWN_FROM = 5; // "get ready" seconds before the timer starts
 
-  let diff = "easy";
+  let diff = "item";
   let sec = 30;
   let remaining = 0;
   let tId = null;   // main timer interval

@@ -22,11 +22,11 @@
     <img class="logo" src="src/logo.png" alt="GLO Graffiti" width="900" height="465" />
     <h1 class="sr-only">Random drawing prompt generator</h1>
 
-    <p class="label">Difficulty</p>
+    <p class="label">Type</p>
     <div class="row" id="difficulty-row">
-      <button class="diff diff-easy active" data-diff="easy"><i class="ti ti-circle-filled dot"></i>Easy</button>
-      <button class="diff diff-medium" data-diff="medium"><i class="ti ti-circle-filled dot"></i>Medium</button>
-      <button class="diff diff-hard" data-diff="hard"><i class="ti ti-circle-filled dot"></i>Hard</button>
+      <button class="diff diff-item active" data-diff="item"><i class="ti ti-circle-filled dot"></i>Item</button>
+      <button class="diff diff-tag" data-diff="tag"><i class="ti ti-circle-filled dot"></i>Tag</button>
+      <button class="diff diff-mural" data-diff="mural"><i class="ti ti-circle-filled dot"></i>Mural</button>
     </div>
 
     <div class="timer-select">
@@ -36,7 +36,7 @@
     <input type="range" class="timer-slider" id="timer-slider" min="0" max="120" step="5" value="30" aria-label="Timer duration" />
 
     <div class="card" id="card">
-      <div class="badge" id="badge"><i class="ti ti-circle-filled"></i><span id="badge-text">Easy</span></div>
+      <div class="badge" id="badge"><i class="ti ti-circle-filled"></i><span id="badge-text">Item</span></div>
       <div class="prompt" id="prompt">Tap generate</div>
       <div class="ready" id="ready">Get ready…</div>
       <div class="timer" id="timer">0:30</div>

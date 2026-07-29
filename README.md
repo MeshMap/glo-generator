@@ -1,19 +1,23 @@
 # AR Draw Prompt Generator
 
 A lightweight prompt generator for a draw/graffiti AR experience. Picks a
-random subject by difficulty, runs a 5-second "get ready" countdown, then a
+random subject by type, runs a 5-second "get ready" countdown, then a
 selectable timer, and sounds an alarm when time's up.
 
 ## Features
 
-- Three difficulty tiers with color coding
-  - **Easy** (green) — single bare objects (`Fish`, `Tree`, `House`)
-  - **Medium** (orange) — an object in a small context (`A fish in a bowl`)
-  - **Hard** (red) — an evocative scene with mood (`A whale tail at sunset`)
-- Timer presets: 30 / 60 / 90 / 120 seconds, or no timer
+- Three prompt types with color coding, mixing in some NYC flavor
+  - **Item** (green) — animals, plants, fruit, veggies, everyday objects,
+    bare or with light context (`Pigeon`, `A hot dog cart on the corner`)
+  - **Tag** (orange) — short, punchy words or names for graffiti lettering
+    (`Nova`, `Bronx`, `Hustle`)
+  - **Mural** (red) — a bigger scene with mood and light
+    (`A subway car covered in graffiti`, `A whale tail at sunset`)
+- Timer: 0–120 second slider (0 = no timer)
 - 5-second get-ready countdown with beeps before each round
 - Pause / resume, and Restart (re-run the timer on the same prompt)
-- Alarm when the timer ends; turns red in the final 5 seconds
+- Start chime, final-5-second warning beeps, and an alarm when the timer
+  ends; turns red in the final 5 seconds
 - No build step, no framework, no bundler — plain HTML/CSS/JS
 - Light and dark mode via `prefers-color-scheme`
 - Installable on phones (web app manifest + Apple home-screen meta tags) so it
