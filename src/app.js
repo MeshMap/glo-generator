@@ -7,7 +7,8 @@
   const COLORS = {
     item:  { bg: "#EAF3DE", fg: "#3B6D11", dot: "#639922" },
     tag:   { bg: "#FAEEDA", fg: "#854F0B", dot: "#EF9F27" },
-    mural: { bg: "#FCEBEB", fg: "#A32D2D", dot: "#E24B4A" }
+    mural: { bg: "#FCEBEB", fg: "#A32D2D", dot: "#E24B4A" },
+    today: { bg: "#F3E8FF", fg: "#6B21A8", dot: "#A855F7" }
   };
 
   const COUNTDOWN_FROM = 5; // "get ready" seconds before the timer starts
@@ -20,12 +21,14 @@
   let running = false;
   let hasPrompt = false;
   let last = "";
+  let lastToday = null;
 
   const el = (id) => document.getElementById(id);
   const badge = el("badge");
   const badgeText = el("badge-text");
   const badgeDot = badge.querySelector("i");
   const promptEl = el("prompt");
+  const contextEl = el("context");
   const readyEl = el("ready");
   const timerEl = el("timer");
   const doneEl = el("done");
@@ -215,19 +218,58 @@
 
   // ---- generation ----------------------------------------------------------
 
+  function capitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  // Today's date as fixed keys, for looking up src/holidays.js entries.
+  function todayKeys() {
+    const d = new Date();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return { mm, key: mm + "-" + dd };
+  }
+
+  function todayCandidates() {
+    const { mm, key } = todayKeys();
+    const pool = [];
+    const daily = HOLIDAYS.daily[key];
+    if (daily) pool.push(daily, daily); // weight today's specific date higher
+    pool.push(...(HOLIDAYS.monthly[mm] || []));
+    if (pool.length === 0) pool.push(...HOLIDAYS.fallback);
+    return pool;
+  }
+
+  function pickToday() {
+    const pool = todayCandidates();
+    let item;
+    do {
+      item = pool[Math.floor(Math.random() * pool.length)];
+    } while (item === lastToday && pool.length > 1);
+    lastToday = item;
+    return {
+      context: item.title ? "It's " + item.title : "",
+      main: capitalize(item.idea)
+    };
+  }
+
   function pickPrompt() {
+    if (diff === "today") return pickToday();
     const pool = PROMPTS[diff];
     let item;
     do {
       item = pool[Math.floor(Math.random() * pool.length)];
     } while (item === last && pool.length > 1);
     last = item;
-    return item.charAt(0).toUpperCase() + item.slice(1);
+    return { context: "", main: capitalize(item) };
   }
 
   el("go").addEventListener("click", () => {
     ensureAudio();
-    promptEl.textContent = pickPrompt();
+    const result = pickPrompt();
+    promptEl.textContent = result.main;
+    contextEl.textContent = result.context;
+    contextEl.classList.toggle("show", !!result.context);
     hasPrompt = true;
     promptEl.animate(
       [{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }],

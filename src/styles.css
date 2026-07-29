@@ -75,6 +75,18 @@ body {
 .row { display: flex; gap: 8px; margin-bottom: 1rem; }
 .row.controls { margin-top: 1rem; margin-bottom: 0; }
 
+#difficulty-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+#difficulty-row .diff {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .timer-select {
   display: flex;
   align-items: baseline;
@@ -158,10 +170,12 @@ button:active { transform: scale(0.98); }
 .diff-item .dot { color: #639922; }
 .diff-tag .dot { color: #ef9f27; }
 .diff-mural .dot { color: #e24b4a; }
+.diff-today .dot { color: #a855f7; }
 
 .diff-item.active { background: #eaf3de; color: #3b6d11; border-color: #97c459; }
 .diff-tag.active { background: #faeeda; color: #854f0b; border-color: #ef9f27; }
 .diff-mural.active { background: #fcebeb; color: #a32d2d; border-color: #e24b4a; }
+.diff-today.active { background: #f3e8ff; color: #6b21a8; border-color: #c084fc; }
 
 .card {
   position: relative;
@@ -192,12 +206,23 @@ button:active { transform: scale(0.98); }
 }
 .badge i { font-size: 10px; }
 
+.context {
+  display: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #a855f7;
+  margin-top: 18px;
+}
+.context.show { display: block; }
+
 .prompt {
   font-size: 30px;
   font-weight: 500;
   line-height: 1.25;
   margin-top: 10px;
 }
+
+.context.show + .prompt { margin-top: 2px; }
 
 .ready, .timer, .done { display: none; }
 .ready.show, .timer:not(.hidden), .done.show { display: block; }

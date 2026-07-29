@@ -27,6 +27,7 @@
       <button class="diff diff-item active" data-diff="item"><i class="ti ti-circle-filled dot"></i>Item</button>
       <button class="diff diff-tag" data-diff="tag"><i class="ti ti-circle-filled dot"></i>Tag</button>
       <button class="diff diff-mural" data-diff="mural"><i class="ti ti-circle-filled dot"></i>Mural</button>
+      <button class="diff diff-today" data-diff="today"><i class="ti ti-circle-filled dot"></i>Today</button>
     </div>
 
     <div class="timer-select">
@@ -37,6 +38,7 @@
 
     <div class="card" id="card">
       <div class="badge" id="badge"><i class="ti ti-circle-filled"></i><span id="badge-text">Item</span></div>
+      <div class="context" id="context"></div>
       <div class="prompt" id="prompt">Tap generate</div>
       <div class="ready" id="ready">Get ready…</div>
       <div class="timer" id="timer">0:30</div>
@@ -51,6 +53,7 @@
   </main>
 
   <script src="src/prompts.js"></script>
+  <script src="src/holidays.js"></script>
   <script src="src/app.js"></script>
 </body>
 </html>
