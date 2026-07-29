@@ -170,12 +170,12 @@ button:active { transform: scale(0.98); }
 .diff-item .dot { color: #639922; }
 .diff-tag .dot { color: #ef9f27; }
 .diff-mural .dot { color: #e24b4a; }
-.diff-today .dot { color: #a855f7; }
+.diff-events .dot { color: #a855f7; }
 
 .diff-item.active { background: #eaf3de; color: #3b6d11; border-color: #97c459; }
 .diff-tag.active { background: #faeeda; color: #854f0b; border-color: #ef9f27; }
 .diff-mural.active { background: #fcebeb; color: #a32d2d; border-color: #e24b4a; }
-.diff-today.active { background: #f3e8ff; color: #6b21a8; border-color: #c084fc; }
+.diff-events.active { background: #f3e8ff; color: #6b21a8; border-color: #c084fc; }
 
 .card {
   position: relative;

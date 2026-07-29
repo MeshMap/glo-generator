@@ -1,5 +1,5 @@
 // AR draw/graffiti prompt generator.
-// Depends on PROMPTS from prompts.js.
+// Depends on PROMPTS from prompts.js and HOLIDAYS from holidays.js.
 
 (function () {
   "use strict";
@@ -8,7 +8,7 @@
     item:  { bg: "#EAF3DE", fg: "#3B6D11", dot: "#639922" },
     tag:   { bg: "#FAEEDA", fg: "#854F0B", dot: "#EF9F27" },
     mural: { bg: "#FCEBEB", fg: "#A32D2D", dot: "#E24B4A" },
-    today: { bg: "#F3E8FF", fg: "#6B21A8", dot: "#A855F7" }
+    events: { bg: "#F3E8FF", fg: "#6B21A8", dot: "#A855F7" }
   };
 
   const COUNTDOWN_FROM = 5; // "get ready" seconds before the timer starts
@@ -20,8 +20,6 @@
   let cId = null;   // countdown interval
   let running = false;
   let hasPrompt = false;
-  let last = "";
-  let lastToday = null;
 
   const el = (id) => document.getElementById(id);
   const badge = el("badge");
@@ -222,46 +220,60 @@
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
+  // Don't show the exact same prompt text again within this window, so
+  // repeated taps (or switching types and back) don't loop the same few
+  // prompts. Each type tracks its own history.
+  const REPEAT_COOLDOWN_MS = 7 * 60 * 1000;
+  const recentHistory = { item: [], tag: [], mural: [], events: [] };
+
+  function pickFresh(modeKey, candidates, textOf) {
+    const now = Date.now();
+    const history = recentHistory[modeKey].filter((e) => now - e.ts < REPEAT_COOLDOWN_MS);
+    const usedTexts = new Set(history.map((e) => e.text));
+    let pool = candidates.filter((c) => !usedTexts.has(textOf(c)));
+    if (pool.length === 0) pool = candidates; // window exhausted the pool — allow repeats
+    const choice = pool[Math.floor(Math.random() * pool.length)];
+    history.push({ text: textOf(choice), ts: now });
+    recentHistory[modeKey] = history;
+    return choice;
+  }
+
   // Today's date as fixed keys, for looking up src/holidays.js entries.
-  function todayKeys() {
+  function dateKeys() {
     const d = new Date();
     const mm = String(d.getMonth() + 1).padStart(2, "0");
     const dd = String(d.getDate()).padStart(2, "0");
     return { mm, key: mm + "-" + dd };
   }
 
-  function todayCandidates() {
-    const { mm, key } = todayKeys();
-    const pool = [];
+  // Flattens today's active holiday(s)/observance(s) into {title, idea}
+  // pairs, one per idea variant, so regenerating rotates the drawable idea
+  // while staying tied to the same event(s).
+  function eventIdeaPool() {
+    const { mm, key } = dateKeys();
+    const groups = [];
     const daily = HOLIDAYS.daily[key];
-    if (daily) pool.push(daily, daily); // weight today's specific date higher
-    pool.push(...(HOLIDAYS.monthly[mm] || []));
-    if (pool.length === 0) pool.push(...HOLIDAYS.fallback);
+    if (daily) groups.push(daily, daily); // weight today's exact date higher
+    groups.push(...(HOLIDAYS.monthly[mm] || []));
+    if (groups.length === 0) groups.push(HOLIDAYS.fallback);
+
+    const pool = [];
+    groups.forEach((g) => g.ideas.forEach((idea) => pool.push({ title: g.title, idea })));
     return pool;
   }
 
-  function pickToday() {
-    const pool = todayCandidates();
-    let item;
-    do {
-      item = pool[Math.floor(Math.random() * pool.length)];
-    } while (item === lastToday && pool.length > 1);
-    lastToday = item;
+  function pickEvents() {
+    const choice = pickFresh("events", eventIdeaPool(), (c) => c.idea);
     return {
-      context: item.title ? "It's " + item.title : "",
-      main: capitalize(item.idea)
+      context: choice.title ? "It's " + choice.title : "",
+      main: capitalize(choice.idea)
     };
   }
 
   function pickPrompt() {
-    if (diff === "today") return pickToday();
-    const pool = PROMPTS[diff];
-    let item;
-    do {
-      item = pool[Math.floor(Math.random() * pool.length)];
-    } while (item === last && pool.length > 1);
-    last = item;
-    return { context: "", main: capitalize(item) };
+    if (diff === "events") return pickEvents();
+    const choice = pickFresh(diff, PROMPTS[diff], (s) => s);
+    return { context: "", main: capitalize(choice) };
   }
 
   el("go").addEventListener("click", () => {
