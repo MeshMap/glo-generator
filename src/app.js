@@ -30,6 +30,8 @@
   const timerEl = el("timer");
   const doneEl = el("done");
   const stopBtn = el("stop");
+  const timerSlider = el("timer-slider");
+  const timerValueEl = el("timer-value");
 
   // ---- difficulty + timer selection ----------------------------------------
 
@@ -50,13 +52,16 @@
     })
   );
 
-  document.querySelectorAll(".time").forEach((b) =>
-    b.addEventListener("click", () => {
-      document.querySelectorAll(".time").forEach((x) => x.classList.remove("active"));
-      b.classList.add("active");
-      sec = parseInt(b.dataset.sec, 10);
-    })
-  );
+  function updateTimerLabel() {
+    timerValueEl.textContent = sec === 0 ? "No timer" : sec + "s";
+  }
+
+  timerSlider.addEventListener("input", () => {
+    sec = parseInt(timerSlider.value, 10);
+    updateTimerLabel();
+  });
+
+  updateTimerLabel();
 
   // ---- audio ---------------------------------------------------------------
 
@@ -69,19 +74,20 @@
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       } catch (e) { /* audio unsupported */ }
     }
-    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    if (audioCtx && audioCtx.state !== "running") audioCtx.resume();
+    return audioCtx;
   }
 
-  function beep(freq, start, dur, track) {
+  function beep(freq, start, dur, track, type) {
     if (!audioCtx) return;
     const o = audioCtx.createOscillator();
     const g = audioCtx.createGain();
-    o.type = "square";
+    o.type = type || "square";
     o.frequency.value = freq;
     o.connect(g);
     g.connect(audioCtx.destination);
     g.gain.setValueAtTime(0.0001, start);
-    g.gain.exponentialRampToValueAtTime(0.35, start + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.4, start + 0.02);
     g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
     o.start(start);
     o.stop(start + dur);
@@ -93,18 +99,35 @@
     alarmNodes = [];
   }
 
-  function alarm() {
-    if (!audioCtx) return;
-    stopAlarm();
+  // Sounds when the "get ready" countdown begins.
+  function startChime() {
+    if (!ensureAudio()) return;
     const t = audioCtx.currentTime;
-    for (let i = 0; i < 4; i++) {
-      beep(880, t + i * 0.32, 0.16, true);
-      beep(660, t + i * 0.32 + 0.16, 0.16, true);
-    }
+    beep(440, t, 0.09, false);
+    beep(660, t + 0.1, 0.14, false);
   }
 
+  // Per-second tick during the 5s "get ready" countdown.
   function readyBeep() {
-    beep(600, audioCtx ? audioCtx.currentTime : 0, 0.1, false);
+    if (!ensureAudio()) return;
+    beep(600, audioCtx.currentTime, 0.1, false);
+  }
+
+  // Per-second tick during the final 5s of the running timer.
+  function warnBeep() {
+    if (!ensureAudio()) return;
+    beep(740, audioCtx.currentTime, 0.09, false);
+  }
+
+  // Sound when the timer reaches zero.
+  function alarm() {
+    if (!ensureAudio()) return;
+    stopAlarm();
+    const t = audioCtx.currentTime;
+    for (let i = 0; i < 5; i++) {
+      beep(880, t + i * 0.32, 0.18, true);
+      beep(660, t + i * 0.32 + 0.16, 0.18, true);
+    }
   }
 
   // ---- timer ---------------------------------------------------------------
@@ -127,6 +150,9 @@
   function tick() {
     remaining--;
     render();
+    if (remaining > 0 && remaining <= 5) {
+      warnBeep();
+    }
     if (remaining <= 0) {
       clearAll();
       running = false;
@@ -168,7 +194,7 @@
     readyEl.classList.add("show");
     timerEl.classList.add("hidden");
     readyEl.textContent = "Get ready… " + n;
-    readyBeep();
+    startChime();
 
     cId = setInterval(() => {
       n--;

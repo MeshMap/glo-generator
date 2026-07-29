@@ -19,6 +19,7 @@
 </head>
 <body>
   <main class="app">
+    <img class="logo" src="src/logo.png" alt="GLO Graffiti" width="900" height="465" />
     <h1 class="sr-only">Random drawing prompt generator</h1>
 
     <p class="label">Difficulty</p>
@@ -28,21 +29,18 @@
       <button class="diff diff-hard" data-diff="hard"><i class="ti ti-circle-filled dot"></i>Hard</button>
     </div>
 
-    <p class="label">Timer</p>
-    <div class="row wrap" id="timer-row">
-      <button class="time active" data-sec="30">30s</button>
-      <button class="time" data-sec="60">60s</button>
-      <button class="time" data-sec="90">90s</button>
-      <button class="time" data-sec="120">120s</button>
-      <button class="time" data-sec="0">No timer</button>
+    <div class="timer-select">
+      <p class="label">Timer</p>
+      <span class="timer-value" id="timer-value">30s</span>
     </div>
+    <input type="range" class="timer-slider" id="timer-slider" min="0" max="120" step="5" value="30" aria-label="Timer duration" />
 
     <div class="card" id="card">
       <div class="badge" id="badge"><i class="ti ti-circle-filled"></i><span id="badge-text">Easy</span></div>
       <div class="prompt" id="prompt">Tap generate</div>
       <div class="ready" id="ready">Get ready…</div>
       <div class="timer" id="timer">0:30</div>
-      <div class="done" id="done">Time's up — pencils down!</div>
+      <div class="done" id="done">Time's up — spray cans down!</div>
     </div>
 
     <div class="row controls">
