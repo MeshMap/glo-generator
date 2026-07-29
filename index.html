@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>AR Draw Prompt Generator</title>
+  <meta name="description" content="Random drawing prompt generator with a get-ready countdown and timer." />
+  <meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#1c1c1a" media="(prefers-color-scheme: dark)" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Draw Prompt" />
+  <link rel="stylesheet" href="src/styles.css" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css" />
+</head>
+<body>
+  <main class="app">
+    <h1 class="sr-only">Random drawing prompt generator</h1>
+
+    <p class="label">Difficulty</p>
+    <div class="row" id="difficulty-row">
+      <button class="diff diff-easy active" data-diff="easy"><i class="ti ti-circle-filled dot"></i>Easy</button>
+      <button class="diff diff-medium" data-diff="medium"><i class="ti ti-circle-filled dot"></i>Medium</button>
+      <button class="diff diff-hard" data-diff="hard"><i class="ti ti-circle-filled dot"></i>Hard</button>
+    </div>
+
+    <p class="label">Timer</p>
+    <div class="row wrap" id="timer-row">
+      <button class="time active" data-sec="30">30s</button>
+      <button class="time" data-sec="60">60s</button>
+      <button class="time" data-sec="90">90s</button>
+      <button class="time" data-sec="120">120s</button>
+      <button class="time" data-sec="0">No timer</button>
+    </div>
+
+    <div class="card" id="card">
+      <div class="badge" id="badge"><i class="ti ti-circle-filled"></i><span id="badge-text">Easy</span></div>
+      <div class="prompt" id="prompt">Tap generate</div>
+      <div class="ready" id="ready">Get ready…</div>
+      <div class="timer" id="timer">0:30</div>
+      <div class="done" id="done">Time's up — pencils down!</div>
+    </div>
+
+    <div class="row controls">
+      <button id="go" class="btn-primary"><i class="ti ti-refresh"></i>Generate</button>
+      <button id="restart" class="btn" title="Restart timer with same prompt"><i class="ti ti-rotate"></i>Restart</button>
+      <button id="stop" class="btn hidden"><i class="ti ti-player-pause"></i>Pause</button>
+    </div>
+  </main>
+
+  <script src="src/prompts.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>
