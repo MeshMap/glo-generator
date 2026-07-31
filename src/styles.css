@@ -75,6 +75,22 @@ body {
 .row { display: flex; gap: 8px; margin-bottom: 1rem; }
 .row.controls { margin-top: 1rem; margin-bottom: 0; }
 
+#mode-row { margin-bottom: 1.5rem; }
+#mode-row .mode,
+#style-row .style-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+#mode-row .mode.active,
+#style-row .style-btn.active {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-color: var(--accent-border);
+}
+
 #difficulty-row {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -254,3 +270,94 @@ button:active { transform: scale(0.98); }
 .btn-primary { flex: 2; font-size: 17px; font-weight: 500; }
 .btn { flex: 1; font-size: 15px; }
 .hidden { display: none !important; }
+
+/* ---- letter generator ---- */
+
+.letter-input {
+  display: block;
+  width: 100%;
+  font: inherit;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  background: var(--surface);
+  border: 0.5px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 1.25rem;
+  min-height: 52px;
+}
+.letter-input:focus { outline: none; border-color: var(--accent-border); }
+.letter-input::placeholder { color: var(--text-muted); text-transform: none; }
+
+.letter-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 1.25rem;
+}
+.letter-key {
+  padding: 0;
+  min-height: 38px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.letter-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.letter-display {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.letter-display .gl-img {
+  display: block;
+  height: 100px;
+  width: auto;
+  margin-left: -14px;
+}
+.letter-display .gl-img:first-child { margin-left: 0; }
+.letter-display .gl-sp { width: 0.4em; }
+
+/* Fallback for a letter with no image asset yet at src/letters/<style>/. */
+.letter-display .gl-fallback {
+  display: inline-block;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--page);
+  border: 2px dashed var(--border-strong);
+  border-radius: 10px;
+  padding: 0 0.15em;
+  margin-left: 4px;
+  line-height: 1.6;
+}
+
+.letter-hint {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0.75rem 0.25rem 0;
+}
+.letter-hint code {
+  background: var(--surface);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 11.5px;
+}

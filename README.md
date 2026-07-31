@@ -1,10 +1,12 @@
 # AR Draw Prompt Generator
 
-A lightweight prompt generator for a draw/graffiti AR experience. Picks a
-random subject by type, runs a 5-second "get ready" countdown, then a
-selectable timer, and sounds an alarm when time's up.
+A lightweight toolkit for a draw/graffiti AR experience: a prompt generator
+and a graffiti letter generator, switchable from the top of the app.
 
-## Features
+## Prompt generator
+
+Picks a random subject by type, runs a 5-second "get ready" countdown, then
+a selectable timer, and sounds an alarm when time's up.
 
 - Four prompt types with color coding, mixing in some NYC flavor
   - **Item** (green) — animals, plants, fruit, veggies, everyday objects,
@@ -25,6 +27,23 @@ selectable timer, and sounds an alarm when time's up.
   ends; turns red in the final 5 seconds
 - No exact-repeat prompts within a ~7 minute window per type, so rapid
   regenerating doesn't loop the same few prompts
+
+## Letter generator
+
+Switch to the **Letters** tab to render graffiti-style lettering for any
+typed word or phrase (or tap a letter from the A–Z grid), in **Bubble** or
+**Block** style.
+
+This composites real **letter images**, not a font — a styled web font
+can't reproduce genuinely hand-drawn, organic graffiti lettering, so each
+character maps to an image file at `src/letters/{bubble,block}/{LETTER}.png`,
+laid out with a slight overlap so a typed word reads as one connected tag.
+No image sets ship with the repo yet; until you add them, letters render as
+dashed placeholder boxes. See [`LETTER_IMAGES.md`](LETTER_IMAGES.md) for the
+full spec on generating and adding a 26-letter set per style.
+
+## Shared features
+
 - No build step, no framework, no bundler — plain HTML/CSS/JS
 - Light and dark mode via `prefers-color-scheme`
 - Installable on phones (web app manifest + Apple home-screen meta tags) so it
@@ -63,10 +82,15 @@ glo-generator/
 ├── favicon-32.png
 ├── icons/                   # manifest icons (192 / 512)
 ├── README.md
+├── LETTER_IMAGES.md         # spec for the Letters tab's image sets
 └── src/
     ├── prompts.js    # Item / Tag / Mural prompt pools (edit these)
     ├── holidays.js   # Events mode's fun-holiday dataset (edit these)
-    ├── app.js        # generation, countdown, timer, alarm
+    ├── app.js        # prompt generation, countdown, timer, alarm
+    ├── letters.js    # mode switch + Bubble/Block letter image compositor
+    ├── letters/
+    │   ├── bubble/   # drop A.png-Z.png here (see LETTER_IMAGES.md)
+    │   └── block/    # drop A.png-Z.png here (see LETTER_IMAGES.md)
     └── styles.css    # styling + light/dark mode
 ```
 
